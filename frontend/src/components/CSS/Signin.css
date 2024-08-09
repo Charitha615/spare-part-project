@@ -1,0 +1,219 @@
+@charset "utf-8";
+/* CSS Document */
+
+*
+{
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: 'Poppins' , sans-serfif;
+}
+
+section
+{
+	position: relative;
+	width: 100%;
+	height: 100vh;
+	display: flex;
+}
+
+section .image-box
+{
+	position: relative;
+	width: 50%;
+	height: 100%;
+}
+
+section .image-box:before
+{
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: linear-gradient(225deg,#e91e63,#03a9f4);
+	z-index: 1;
+	mix-blend-mode: screen;
+}
+
+section .image-box img
+{
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+
+
+section .content-box
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 50%;
+	height: 100%;
+}
+
+section .content-box .form-box
+{
+	width: 50%;
+}
+
+section .content-box .form-box h2
+{
+	color: #607d8b;
+	font-weight: 600;
+	font-size: 1.5em;
+	text-transform: uppercase;
+	margin-bottom: 20px;
+	border-bottom: 4px solid #ff4584;
+	display: inline-block;
+	letter-spacing: 1px;
+}
+
+section .content-box .form-box .input-box
+{
+	margin-bottom: 20px;
+}
+
+section .content-box .form-box .input-box span
+{
+	font-size: 16px;
+	margin-bottom: 5px;
+	display: inline-block;
+	color: #607d8b;
+	font-weight: 300;
+	letter-spacing: 1px;
+}
+
+section .content-box .form-box .input-box input
+{
+	width: 100%;
+	padding: 10px 20px;
+	outline: none;
+	font-weight: 400;
+	border: 1px solid #607d8b;
+	font-size: 16px;
+	letter-spacing: 1px;
+	color: #607d8b;
+	background: transparent;
+	border-radius: 30px;
+}
+
+section .content-box .form-box .input-box input[type="submit"]
+{
+	background: #ff4584;
+	color: #fff;
+	outline: none;
+	border: none;
+	font-weight: 500;
+	cursor: pointer;
+}
+
+section .content-box .form-box .input-box input[type="submit"]:hover
+{
+	background: #f53677;
+}
+
+section .content-box .form-box .remember
+{
+	margin-bottom: 10px;
+	color: #607d8b;
+	font-weight: 400;
+	font-size: 14px;
+}
+
+section .content-box .form-box p
+{
+	color: #607d8b;
+}
+
+section .content-box .form-box p a
+{
+	color: #ff4584;
+}
+
+section .content-box .form-box h3
+{
+	color: #607d8b;
+	text-align: center;
+	margin: 80px 0 10px;
+	font-weight: 500;
+}
+
+section .content-box .form-box .social-media
+{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+section .content-box .form-box .social-media a
+{
+	font-size: 34px;
+	background: #607d8b;
+	color: inherit;
+	border: 1px solid #ccc;
+	width: 50px;
+	height: 50px;
+	line-height: 48px;
+	display: inline-block;
+	text-align: center;
+	border-radius: 50%;
+	margin: 0 8px;
+	opacity: 0.75;
+}
+
+section .content-box .form-box .social-media a:hover
+{
+	background: #ff4584;
+}
+
+section .content-box .form-box .social-media a i
+{
+	transform: scale(0.5);
+	filter: invert(1);
+}
+
+@media (max-width: 768px)
+{
+	section .image-box
+	{
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+	
+	section .content-box
+	{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 100%;
+		height: 100%;
+		z-index: 1;
+	}
+	
+	section .content-box .form-box
+	{
+		width: 100%;
+		padding: 40px;
+		background: rgb(255 255 255 / 0.9);
+		margin: 50px;
+	}
+	
+	
+	section .content-box .form-box h3
+	{
+		color: #607d8b;
+		text-align: center;
+		margin: 30px 0 10px;
+		font-weight: 500;
+	}
+}
