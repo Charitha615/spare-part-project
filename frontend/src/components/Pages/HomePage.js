@@ -7,7 +7,7 @@ function HomePage() {
             <nav className="navigation">
                 <a href="Index.html" className="logo">GAMER'S LK</a>
                 <input type="checkbox" className="menu-btn" id="menu-btn" />
-                <label for="menu-btn" className="menu-icon">
+                <label htmlFor="menu-btn" className="menu-icon">
                     <span className="nav-icon">
                         <i className="fas fa-bars"></i>
                     </span>
@@ -150,6 +150,18 @@ function HomePage() {
                     </div>
                 </div>
             </section>
+
+            {/* Chatbot Integration */}
+            <section id="chatbot">
+                <iframe
+                    src="https://www.chatbase.co/chatbot-iframe/BugazHm7y0f1NHtmyZjGH"
+                    width="100%"
+                    height="500px"
+                    style={{ border: 'none' }}
+                    allow="microphone; autoplay; encrypted-media;"
+                ></iframe>
+            </section>
+
             <footer>
                 <div className="footer-container">
                     <div className="footer-logo-container">

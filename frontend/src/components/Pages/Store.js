@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate  } from 'react-router-dom';
 import '../CSS/Store.css';
 
 const BASE_URL = "http://localhost:8080/api/vehicleTypes";
@@ -8,6 +8,7 @@ const IMAGE_BASE_URL = "http://localhost:8080";
 
 function Store() {
     const [vehicleTypes, setVehicleTypes] = useState([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(BASE_URL)
@@ -21,6 +22,7 @@ function Store() {
 
     return (
         <div>
+
             <nav className="navigation">
                 <a href="Index.html" className="logo">AutoUD</a>
                 <ul className="menu">
@@ -35,8 +37,12 @@ function Store() {
                     <a href="#" className="user"><i className="fas fa-user"></i></a>
                 </div>
             </nav>
+            <button onClick={() => navigate(-1)} className="back-button" style={{marginTop:100}}>Back</button> {/* Back Button */}
+
             <section id="Categories">
+
                 <h2>Categories</h2>
+
                 <div className="category-container">
                     {vehicleTypes.map(vehicle => (
                         <Link key={vehicle.id} to={`/brands/${vehicle.id}`} className="category-box">

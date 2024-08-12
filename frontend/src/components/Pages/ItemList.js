@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Link, useParams } from 'react-router-dom';
+import {Link, useNavigate, useParams} from 'react-router-dom';
 import '../CSS/Brands.css';
 
 const BASE_URL = "http://localhost:8080/api/spareParts/vehicleType";
@@ -11,6 +11,7 @@ function ItemList() {
     const [spareParts, setSpareParts] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`${BASE_URL}/${vehicleTypeId}/brand/${brandId}`)
@@ -54,6 +55,7 @@ function ItemList() {
                     <a href="#" className="user"><i className="fas fa-user"></i></a>
                 </div>
             </nav>
+            <button onClick={() => navigate(-1)} className="back-button" style={{marginTop:150}}>Back</button> {/* Back Button */}
             <section id="Categories">
                 <h2>Spare Parts</h2>
                 <div className="category-container">

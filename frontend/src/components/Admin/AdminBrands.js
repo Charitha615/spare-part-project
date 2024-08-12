@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Grid, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+// import { Edit } from '@mui/icons-material'; // Commenting out the Edit icon import
+import { Delete } from '@mui/icons-material';
 import Navigation from '../Navigation';
+import Swal from 'sweetalert2';
 
 const BASE_URL = "http://localhost:8080/api/brands";
 const IMAGE_BASE_URL = "http://localhost:8080";
@@ -23,14 +25,21 @@ function AdminBrands() {
     }, []);
 
     const fetchBrands = async () => {
-        const res = await axios.get(BASE_URL);
-        console.log(res.data);
-        setBrands(res.data);
+        try {
+            const res = await axios.get(BASE_URL);
+            setBrands(res.data);
+        } catch (error) {
+            Swal.fire('Error', 'Failed to fetch brands.', 'error');
+        }
     };
 
     const fetchVehicleTypes = async () => {
-        const res = await axios.get(VEHICLE_TYPES_URL);
-        setVehicleTypes(res.data);
+        try {
+            const res = await axios.get(VEHICLE_TYPES_URL);
+            setVehicleTypes(res.data);
+        } catch (error) {
+            Swal.fire('Error', 'Failed to fetch vehicle types.', 'error');
+        }
     };
 
     const handleImageChange = (e) => {
@@ -38,6 +47,21 @@ function AdminBrands() {
     };
 
     const createOrUpdateBrand = async () => {
+        if (!brandName.trim()) {
+            Swal.fire('Validation Error', 'Brand Name is required', 'warning');
+            return;
+        }
+
+        if (!selectedVehicleType) {
+            Swal.fire('Validation Error', 'Vehicle Type is required', 'warning');
+            return;
+        }
+
+        if (!image && !currentImageUrl) {
+            Swal.fire('Validation Error', 'Image is required', 'warning');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('name', brandName);
         formData.append('vehicleTypeId', selectedVehicleType);
@@ -47,38 +71,63 @@ function AdminBrands() {
             formData.append('url', currentImageUrl);
         }
 
-        if (editId) {
-            await axios.put(`${BASE_URL}/${editId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            setEditId(null);
-            setCurrentImageUrl('');
-        } else {
-            await axios.post(`${BASE_URL}/upload`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+        try {
+            if (editId) {
+                await axios.put(`${BASE_URL}/${editId}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setEditId(null);
+                setCurrentImageUrl('');
+                Swal.fire('Success', 'Brand updated successfully', 'success');
+            } else {
+                await axios.post(`${BASE_URL}/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                Swal.fire('Success', 'Brand added successfully', 'success');
+            }
+            setBrandName('');
+            setSelectedVehicleType('');
+            setImage(null);
+            fetchBrands();
+        } catch (error) {
+            Swal.fire('Error', 'Failed to save brand.', 'error');
         }
-        setBrandName('');
-        setSelectedVehicleType('');
-        setImage(null);
-        fetchBrands();
     };
 
+    // Commenting out the edit function
+    /*
     const editBrand = (id, name, vehicleTypeId, url) => {
-        // alert(id);
         setEditId(id);
         setBrandName(name);
         setSelectedVehicleType(vehicleTypeId);
         setCurrentImageUrl(url);
     };
+    */
 
     const deleteBrand = async (id) => {
-        await axios.delete(`${BASE_URL}/${id}`);
-        fetchBrands();
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`${BASE_URL}/${id}`);
+                fetchBrands();
+                Swal.fire('Deleted!', 'Brand has been deleted.', 'success');
+            } catch (error) {
+                Swal.fire('Error', 'Failed to delete brand.', 'error');
+            }
+        }
     };
 
     return (
@@ -156,9 +205,10 @@ function AdminBrands() {
                                         <img src={`${IMAGE_BASE_URL}/${brand.url}`} alt={brand.name} width={50} height={50} />
                                     </TableCell>
                                     <TableCell>
-                                        <IconButton onClick={() => editBrand(brand.id, brand.name, brand.vehicleTypeName, brand.url)} color="primary">
+                                        {/* Commented out the Edit button */}
+                                        {/* <IconButton onClick={() => editBrand(brand.id, brand.name, brand.vehicleTypeName, brand.url)} color="primary">
                                             <Edit />
-                                        </IconButton>
+                                        </IconButton> */}
                                         <IconButton onClick={() => deleteBrand(brand.id)} color="secondary">
                                             <Delete />
                                         </IconButton>

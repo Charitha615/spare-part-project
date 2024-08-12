@@ -4,8 +4,10 @@ import {
     Container, Typography, TextField, Button, Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper, IconButton, Grid, MenuItem, Select, InputLabel, FormControl
 } from '@mui/material';
-import { Edit, Delete } from '@mui/icons-material';
+// import { Edit } from '@mui/icons-material'; // Commenting out the Edit icon import
+import { Delete } from '@mui/icons-material';
 import Navigation from '../Navigation';
+import Swal from 'sweetalert2';
 
 const BASE_URL = "http://localhost:8080/api/spareParts";
 const VEHICLE_TYPES_URL = "http://localhost:8080/api/vehicleTypes";
@@ -31,18 +33,30 @@ function AdminSpareParts() {
     }, []);
 
     const fetchSpareParts = async () => {
-        const res = await axios.get(BASE_URL);
-        setSpareParts(res.data);
+        try {
+            const res = await axios.get(BASE_URL);
+            setSpareParts(res.data);
+        } catch (error) {
+            Swal.fire('Error', 'Failed to fetch spare parts.', 'error');
+        }
     };
 
     const fetchVehicleTypes = async () => {
-        const res = await axios.get(VEHICLE_TYPES_URL);
-        setVehicleTypes(res.data);
+        try {
+            const res = await axios.get(VEHICLE_TYPES_URL);
+            setVehicleTypes(res.data);
+        } catch (error) {
+            Swal.fire('Error', 'Failed to fetch vehicle types.', 'error');
+        }
     };
 
     const fetchBrands = async () => {
-        const res = await axios.get(BRANDS_URL);
-        setBrands(res.data);
+        try {
+            const res = await axios.get(BRANDS_URL);
+            setBrands(res.data);
+        } catch (error) {
+            Swal.fire('Error', 'Failed to fetch brands.', 'error');
+        }
     };
 
     const handleImagesChange = (e) => {
@@ -50,6 +64,41 @@ function AdminSpareParts() {
     };
 
     const createOrUpdateSparePart = async () => {
+        if (!name.trim()) {
+            Swal.fire('Validation Error', 'Spare Part Name is required', 'warning');
+            return;
+        }
+
+        if (!price.trim()) {
+            Swal.fire('Validation Error', 'Price is required', 'warning');
+            return;
+        }
+
+        if (!category.trim()) {
+            Swal.fire('Validation Error', 'Category is required', 'warning');
+            return;
+        }
+
+        if (!availableQuantity.trim()) {
+            Swal.fire('Validation Error', 'Available Quantity is required', 'warning');
+            return;
+        }
+
+        if (!selectedVehicleType) {
+            Swal.fire('Validation Error', 'Vehicle Type is required', 'warning');
+            return;
+        }
+
+        if (!selectedBrand) {
+            Swal.fire('Validation Error', 'Brand is required', 'warning');
+            return;
+        }
+
+        if (images.length === 0) {
+            Swal.fire('Validation Error', 'At least one image is required', 'warning');
+            return;
+        }
+
         const formData = new FormData();
         formData.append('name', name);
         formData.append('price', price);
@@ -59,26 +108,32 @@ function AdminSpareParts() {
         formData.append('brandId', selectedBrand);
         images.forEach(image => formData.append('images', image));
 
-        if (editId) {
-            
-            await axios.put(`${BASE_URL}/${editId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            setEditId(null);
-
-        } else {
-            await axios.post(`${BASE_URL}/upload`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
+        try {
+            if (editId) {
+                await axios.put(`${BASE_URL}/${editId}`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                setEditId(null);
+                Swal.fire('Success', 'Spare part updated successfully', 'success');
+            } else {
+                await axios.post(`${BASE_URL}/upload`, formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                    },
+                });
+                Swal.fire('Success', 'Spare part added successfully', 'success');
+            }
+            clearForm();
+            fetchSpareParts();
+        } catch (error) {
+            Swal.fire('Error', 'Failed to save spare part.', 'error');
         }
-        clearForm();
-        fetchSpareParts();
     };
 
+    // Commenting out the edit function
+    /*
     const editSparePart = (sparePart) => {
         setEditId(sparePart.id);
         setName(sparePart.name);
@@ -88,10 +143,28 @@ function AdminSpareParts() {
         setSelectedVehicleType(sparePart.vehicleTypeId);
         setSelectedBrand(sparePart.brandId);
     };
+    */
 
     const deleteSparePart = async (id) => {
-        await axios.delete(`${BASE_URL}/${id}`);
-        fetchSpareParts();
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`${BASE_URL}/${id}`);
+                fetchSpareParts();
+                Swal.fire('Deleted!', 'Spare part has been deleted.', 'success');
+            } catch (error) {
+                Swal.fire('Error', 'Failed to delete spare part.', 'error');
+            }
+        }
     };
 
     const clearForm = () => {
@@ -237,9 +310,10 @@ function AdminSpareParts() {
                                         ))}
                                     </TableCell>
                                     <TableCell>
-                                        <IconButton onClick={() => editSparePart(sparePart)} color="primary">
+                                        {/* Commented out the Edit button */}
+                                        {/* <IconButton onClick={() => editSparePart(sparePart)} color="primary">
                                             <Edit />
-                                        </IconButton>
+                                        </IconButton> */}
                                         <IconButton onClick={() => deleteSparePart(sparePart.id)} color="secondary">
                                             <Delete />
                                         </IconButton>

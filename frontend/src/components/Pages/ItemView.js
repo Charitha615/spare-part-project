@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import {useNavigate, useParams} from 'react-router-dom';
 import '../CSS/ItemView.css';
 
 const BASE_URL = "http://localhost:8080/api/spareParts";
@@ -10,6 +10,7 @@ function ItemView({ addToCart }) {
     const { id } = useParams();
     const [sparePart, setSparePart] = useState(null);
     const [bigImgSrc, setBigImgSrc] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`${BASE_URL}/${id}`)
@@ -47,6 +48,7 @@ function ItemView({ addToCart }) {
                     <a href="#" className="user"><i className="fas fa-user"></i></a>
                 </div>
             </nav>
+            <button onClick={() => navigate(-1)} className="back-button" style={{marginTop:150}}>Back</button> {/* Back Button */}
             <div className="flex-box">
                 <div className="left">
                     <div className="big-img">

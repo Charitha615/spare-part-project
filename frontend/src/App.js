@@ -16,6 +16,7 @@ import AdminVehicleTypes from './components/Admin/AdminVehicleTypes';
 import AdminBrands from './components/Admin/AdminBrands';
 import AdminSpareParts from './components/Admin/AdminSpareParts';
 import Checkout from './components/Checkout';
+// import About from './components/html/About.html';
 
 function App() {
     const [cart, setCart] = useState([]);
@@ -58,6 +59,7 @@ const MainRoutes = ({ addToCart, cart }) => {
                 <Route path="/sparePart/:id" element={<ItemView addToCart={addToCart} />} />
                 <Route path="/search" element={<SearchButton />} />
                 <Route path="/home" element={<HomePage />} />
+                {/*<Route path="/about" element={<About />} />*/}
                 <Route path="/AdminDashboard" element={<AdminDashboard />} />
                 <Route path="/vehicle-types" element={<AdminVehicleTypes />} />
                 <Route path="/AdminBrands" element={<AdminBrands />} />
